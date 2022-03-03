@@ -1,0 +1,28 @@
+How to undervolt intel cpus:
+
+Note: It's not possible to undervolt 10th gen CPU and GPU unless you have a very outdated BIOS
+
+1. Install msr-tools to write to MSR registers
+
+Example:
+
+wrmsr 0x150 0x80000211ecc00000
+
+Where 2 = Cache and ecc0000 is the value
+
+
+0- CPU cores
+1- GPU
+2- CPU cache
+3- System Agent
+4- Analog I/O
+5- Digital I/O
+
+To calculate the offset in python:
+mv = -120
+format(0xFFE00000&( (round(mv*1.024)&0xFFF) <<21), '08x')
+
+
+to read the values:
+wrmsr 0x150 0x8000001000000000
+rdmsr 0x150
