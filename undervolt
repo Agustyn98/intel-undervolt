@@ -21,13 +21,11 @@ if len(sys.argv) == 1:
     try:
         file = open(path)
     except:
-        print('eror')
         file = open(path, 'w+')
 
     for line in file:
-        print(line)
         words = line.split(' ')
-        print(words)
+        #print(words)
         if len(words) < 2:
             continue
         part = words[0].lower()
