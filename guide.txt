@@ -26,3 +26,48 @@ format(0xFFE00000&( (round(mv*1.024)&0xFFF) <<21), '08x')
 to read the values:
 wrmsr 0x150 0x8000001000000000
 rdmsr 0x150
+
+
+
+VALUES TESTED:
+Cpu
+No effect?
+
+Gpu
+No effect?
+
+Cache
+100 -> OK
+150 -> OK
+150 -> Breaks
+200 -> Breaks
+
+Agent
+100 -> OK
+150 -> Breaks
+
+Analog
+150 -> Breaks
+100 -> Breaks
+70 -> OK
+
+Digital
+150 -> OK
+180 -> OK
+220 -> OK
+
+
+-No undervolt:
+time for fib.py: ~5.77, peak voltage: ~1.15
+
+-Undervolt cpu and cpu by 50 and 100:
+Same as above
+
+-Undervolt everyhing by 50:
+time for fib.py: ~6.02, peak voltage: ~1.12
+
+-Undervolt analog i/o by 60, the rest by 100:
+time for fib.py: ~6.30, peak voltage: ~0.95
+
+-Undervolt cpu+gpu by 50, analog i/o by 65, agent by 110 digital and cache by 140:
+time: 5.9, peak voltage: 1.14 -> similar to no undervolt
