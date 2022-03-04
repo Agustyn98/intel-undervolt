@@ -1,22 +1,14 @@
 #!/usr/bin/python
 """
 Requirements: msr-tools
-
-Usage:
--Undervolt all parts of the cpu
-undervolt -a [VALUE]
--Undervolt each piece at a different level
-undervolt
 """
 
 import sys
 from subprocess import call
-from pathlib import Path
 
 if len(sys.argv) == 1:
     cores = gpu = cache = agent = analog = digital = 0
-    #path = str(Path.home()) + '/.config' + '/undervolt.conf'
-    path = 'undervolt.conf'
+    path = '/usr/local/bin/undervolt.conf'
 
     try:
         file = open(path)
@@ -25,7 +17,6 @@ if len(sys.argv) == 1:
 
     for line in file:
         words = line.split(' ')
-        #print(words)
         if len(words) < 2:
             continue
         part = words[0].lower()
