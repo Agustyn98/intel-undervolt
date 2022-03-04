@@ -16,7 +16,6 @@ if len(sys.argv) == 1:
         file = open(path, 'w+')
 
     for line in file:
-        break
         words = line.split(' ')
         if len(words) < 2:
             continue
