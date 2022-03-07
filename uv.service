@@ -7,7 +7,7 @@ After=hybrid-sleep.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/undervolt
+ExecStart=/usr/local/bin/undervolt apply
 
 [Install]
 WantedBy=multi-user.target

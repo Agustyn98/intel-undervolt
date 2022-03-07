@@ -1,42 +1,43 @@
 #!/usr/bin/python
-"""
-Requirements: msr-tools
-"""
 
 import sys
 import subprocess
 
 
 def main():
-    if len(sys.argv) == 1:
+    if len(sys.argv) < 2 or sys.argv[1] in ('--help', '-h', 'help'):
+        print("Usage: undervolt MODE\n\tread        read the current values\n\tapply       apply values from the config file")
+        return
 
-        path = '/etc/uv-intel.conf'
+    if sys.argv[1] == 'apply':
+
+        path='/etc/uv-intel.conf'
 
         try:
-            file = open(path)
+            file=open(path)
         except:
-            file = open(path, 'w+')
+            file=open(path, 'w+')
 
-        cores, gpu, cache, unslice, analog = parse_file(file)
+        cores, gpu, cache, unslice, analog=parse_file(file)
 
-        offset_cores = format(0xFFE00000 & (
+        offset_cores=format(0xFFE00000 & (
             (round(cores*1.024) & 0xFFF) << 21), '08x')
-        offset_gpu = format(0xFFE00000 & (
+        offset_gpu=format(0xFFE00000 & (
             (round(gpu*1.024) & 0xFFF) << 21), '08x')
-        offset_cache = format(0xFFE00000 & (
+        offset_cache=format(0xFFE00000 & (
             (round(cache*1.024) & 0xFFF) << 21), '08x')
-        offset_unslice = format(0xFFE00000 & (
+        offset_unslice=format(0xFFE00000 & (
             (round(unslice*1.024) & 0xFFF) << 21), '08x')
-        offset_analog = format(0xFFE00000 & (
+        offset_analog=format(0xFFE00000 & (
             (round(analog*1.024) & 0xFFF) << 21), '08x')
 
-        command_cpu = "wrmsr 0x150 0x80000011" + offset_cores
-        command_gpu = "wrmsr 0x150 0x80000111" + offset_gpu
-        command_cache = "wrmsr 0x150 0x80000211" + offset_cache
-        command_unslice = "wrmsr 0x150 0x80000311" + offset_unslice
-        command_analog = "wrmsr 0x150 0x80000411" + offset_analog
+        command_cpu="wrmsr 0x150 0x80000011" + offset_cores
+        command_gpu="wrmsr 0x150 0x80000111" + offset_gpu
+        command_cache="wrmsr 0x150 0x80000211" + offset_cache
+        command_unslice="wrmsr 0x150 0x80000311" + offset_unslice
+        command_analog="wrmsr 0x150 0x80000411" + offset_analog
 
-        commands = [command_cpu, command_gpu,
+        commands=[command_cpu, command_gpu,
                     command_cache, command_unslice, command_analog]
 
         for c in commands:
@@ -65,12 +66,15 @@ def main():
         r = subprocess.check_output(['rdmsr', '0x150'])
         print('Analog I/O: {:0.1f} mV'.format(offset_to_mv(r)))
 
+    else:
+        print('Invalid argument')
+
 
 def parse_file(file):
     cores = gpu = cache = unslice = analog = 0
     for line in file:
         words = line.strip().split(' ')
-        if len(words) < 1:
+        if len(words) < 2:
             continue
         part = words[0].lower()
         val = -int(words[1])
